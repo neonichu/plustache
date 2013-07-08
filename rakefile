@@ -33,7 +33,7 @@ BIN_OBJECTS = BIN_FILES.collect { |fn|
 
 # include dirs
 INCLUDE_DIRS = [".", "/usr/local/include"]
-LDFLAGS = ["-L /usr/local/lib"]
+LDFLAGS = ["-L /usr/local/lib", "-stdlib=libc++"]
 
 res = %x[uname].chomp
 if res == "Darwin"
@@ -47,7 +47,7 @@ end
 # compiler/linker stuff
 CC = "g++"
 LD = "g++"
-CCFLAGS = ["-O3","-Wall", "-fPIC", "-I #{INCLUDE_DIRS.join(" -I ")}"]
+CCFLAGS = ["-O3","-Wall", "-fPIC", "-I #{INCLUDE_DIRS.join(" -I ")}", "-std=c++11", "-stdlib=libc++"]
 
 
 # task definitions
@@ -107,8 +107,7 @@ import ".depend.mf"
 directory BINDIR
 file APPLICATION => BINDIR
 file APPLICATION => SRC_OBJECTS + BIN_OBJECTS do |t|
-  sh "#{LD} #{SRC_OBJECTS} #{BIN_OBJECTS} -o #{t.name} #{LDFLAGS.join(" ")} \
--lboost_regex"
+  sh "#{LD} #{SRC_OBJECTS} #{BIN_OBJECTS} -o #{t.name} #{LDFLAGS.join(" ")}"
 end
 
 # rules for unit testing
@@ -116,7 +115,7 @@ directory BINDIR
 file TEST => BINDIR
 file TEST => SRC_OBJECTS + TEST_OBJECTS do |t|
   sh "#{LD} #{TEST_OBJECTS} #{SRC_OBJECTS} -o #{t.name} #{LDFLAGS.join(" ")} \
--lboost_regex -lgtest"
+-lgtest"
 end
 
 # rules for static library
@@ -130,7 +129,7 @@ end
 directory LIBDIR
 file DYNAMIC_LIB => LIBDIR
 file DYNAMIC_LIB => SRC_OBJECTS do |t|
-  sh "#{LD} #{DYNFLAGS.join(" ")} -o #{DYNAMIC_LIB} #{SRC_OBJECTS} -lboost_regex"
+  sh "#{LD} #{DYNFLAGS.join(" ")} -o #{DYNAMIC_LIB} #{SRC_OBJECTS}"
 end
 
 # compile rules for object files

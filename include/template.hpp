@@ -7,9 +7,9 @@
 #define PLUSTACHE_TEMPLATE_H
 #include <iostream>
 #include <fstream>
+#include <regex>
 #include <streambuf>
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/regex.hpp>
 
 #include "include/plustache_types.hpp"
 #include "include/context.hpp"
@@ -30,9 +30,9 @@ private:
     std::string otag;
     std::string ctag;
     /* regex */
-    boost::regex tag;
-    boost::regex section;
-    boost::regex escape_chars;
+    std::regex tag;
+    std::regex section;
+    std::regex escape_chars;
     /* lut for HTML escape chars */
     std::map<std::string, std::string> escape_lut;
     /* render and helper methods */
