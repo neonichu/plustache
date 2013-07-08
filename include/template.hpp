@@ -9,7 +9,6 @@
 #include <fstream>
 #include <regex>
 #include <streambuf>
-#include <boost/algorithm/string/trim.hpp>
 
 #include "include/plustache_types.hpp"
 #include "include/context.hpp"

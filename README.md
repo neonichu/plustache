@@ -107,5 +107,4 @@ Or you can get it via [homebrew](http://github.com/mxcl/homebrew):
 * plustache executable
 
 ## Dependencies
-* boost for regex and some other things
 * google test for unit testing

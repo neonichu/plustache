@@ -6,11 +6,28 @@
 
 #include "include/template.hpp"
 
+#include <algorithm> 
+#include <functional> 
+#include <cctype>
+#include <locale>
 #include <string>
-#include <boost/algorithm/string/trim.hpp>
 
 #include "include/plustache_types.hpp"
 #include "include/context.hpp"
+
+static inline std::string &ltrim(std::string &s) {
+        s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+        return s;
+}
+
+static inline std::string &rtrim(std::string &s) {
+        s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+        return s;
+}
+
+static inline std::string &trim(std::string &s) {
+        return ltrim(rtrim(s));
+}
 
 /**
  * @brief constructor taking no arguments
@@ -92,8 +109,8 @@ std::string template_t::render_tags(const std::string& tmplate,
     {
         std::string modifier(matches[1].first, matches[1].second);
         std::string key(matches[2].first, matches[2].second);
-        boost::algorithm::trim(key);
-        boost::algorithm::trim(modifier);
+        key = trim(key);
+        modifier = trim(modifier);
         std::string text(start, matches[0].second);
         std::string repl;
         // don't html escape this
@@ -197,8 +214,8 @@ std::string template_t::render_sections(const std::string& tmplate,
         std::string key(matches[2].first, matches[2].second);
         std::string modifier(matches[1]);
         // trimming
-        boost::algorithm::trim(key);
-        boost::algorithm::trim(modifier);
+        key = trim(key);
+        modifier = trim(modifier);
         std::string repl = "";
         std::string show = "false";
         CollectionType values;
@@ -328,7 +345,7 @@ std::string template_t::html_escape(const std::string& s)
     {
         std::string key(matches[0].first, matches[0].second);
         std::string text(start, matches[0].second);
-        boost::algorithm::trim(key);
+        key = trim(key);
         std::string repl;
         repl = escape_lut[key];
         ret += std::regex_replace(text, escape_chars, repl,
